@@ -1,0 +1,1 @@
+# Reliability Intelligence Platform V1 A prototype demonstrating system simulation, machine learning, reliability analytics, RUL prediction, and executive decision support for semiconductor and aerospace applications.
