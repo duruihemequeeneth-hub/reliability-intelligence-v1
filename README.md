@@ -19,41 +19,38 @@
 
 ## Key Results
 
-- **Weibull Shape Parameter (β):**
-- **MTBF:**
-- **B10 Life:**
-- **RUL Prediction MAE:**
-- **R² Score:**
-- **Cost Avoidance:**
-- **Fleet Risk:**
+- **Weibull Shape Parameter (β)**
+- **MTBF**
+- **B10 Life**
+- **RUL Prediction MAE**
+- **R² Score**
+- **Cost Avoidance**
+- **Fleet Risk**
 
 ---
 
 ##  Architecture
-┌─────────────────────────────────────────────────────────────┐
-│ Streamlit Executive Dashboard │
-│ - Asset health heatmap │
-│ - RUL with confidence bands │
-│ - Cost optimizer widget │
-│ - Actionable recommendations │
-└─────────────────────────────────────────────────────────────┘
+
+│ Streamlit Executive Dashboard:
+│ - Asset health heatmap
+│ - RUL with confidence bands
+│ - Cost optimizer widget
+│ - Actionable recommendation
 ▲
-┌─────────────────────────────────────────────────────────────┐
-│ Business Impact Layer │
-│ - Cost optimization │
-│ - Risk assessment │
-│ - Executive summaries │
-└─────────────────────────────────────────────────────────────┘
+┐
+│ Business Impact Layer:
+│ - Cost optimization
+│ - Risk assessment
+│ - Executive summarie
 ▲
-┌─────────────────────────────────────────────────────────────┐
-│ ML & Reliability Layer │
-│ - XGBoost RUL prediction │
-│ - Isolation Forest anomaly detection │
-│ - Weibull survival analysis │
-└─────────────────────────────────────────────────────────────┘
+
+│  Machine Learning & Reliability Layer:
+│ - XGBoost RUL prediction
+│ - Isolation Forest anomaly detection
+│ - Weibull survival analysi
 ▲
-┌─────────────────────────────────────────────────────────────┐
-│ Data Layer │
-│ - NASA C-MAPSS turbofan data (FD001) │
-│ - Synthetic semiconductor data (planned) │
-└─────────────────────────────────────────────────────────────┘
+
+│ Data Laye:
+│ - NASA C-MAPSS turbofan data (FD001)
+│ - Synthetic semiconductor data (planned)
+
