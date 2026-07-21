@@ -1,6 +1,6 @@
 # Reliability Intelligence Platform V1
 
-**A prototype demonstrating system simulation, machine learning, reliability analytics, RUL prediction, and executive decision support for aerospace and semiconductor applications.**
+**A prototype demonstrating system simulation, machine learning, reliability analytics, RUL prediction, and executive decision support for high-risk complex indutrial systems applications ( aerospace, semiconductor, etc).**
 
 ---
 
@@ -31,26 +31,26 @@
 
 ##  Architecture
 
-│ Streamlit Executive Dashboard:
-│ - Asset health heatmap
-│ - RUL with confidence bands
-│ - Cost optimizer widget
-│ - Actionable recommendation
-▲
-┐
-│ Business Impact Layer:
-│ - Cost optimization
-│ - Risk assessment
-│ - Executive summarie
-▲
+ Streamlit Executive Dashboard:**
+ -- **Asset health heatmap**
+ - **RUL with confidence bands**
+ - **Cost optimizer widget**
+ - **Actionable recommendation**
 
-│  Machine Learning & Reliability Layer:
-│ - XGBoost RUL prediction
-│ - Isolation Forest anomaly detection
-│ - Weibull survival analysi
-▲
 
-│ Data Laye:
-│ - NASA C-MAPSS turbofan data (FD001)
-│ - Synthetic semiconductor data (planned)
+ Business Impact Layer:**
+ - **Cost optimization**
+ - **Risk assessment**
+ - **Executive summaries**
+
+
+ Machine Learning & Reliability Layer:**
+ - **XGBoost RUL prediction**
+ - **Isolation Forest anomaly detection**
+ - **Weibull survival analysis**
+
+
+ Data Layer:**
+ - **NASA C-MAPSS turbofan data (FD001)**
+ - **Synthetic semiconductor data (planned)**
 

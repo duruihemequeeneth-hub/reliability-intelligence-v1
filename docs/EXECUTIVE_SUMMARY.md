@@ -9,16 +9,16 @@ High stakes manufacturers face increasing pressure to:
 
 ## Solution
 
-The Reliability Intelligence Platform V1 demonstrates an end-to-end solution that:
+This Reliability Intelligence Platform V1 demonstrates an end-to-end solution that:
 
-1. **Ingests sensor data** from turbofan engines (NASA C-MAPSS)
+1. **Ingests sensor data** from wherever
 2. **Analyzes reliability** using Weibull statistics (MTBF, B10/B50 life)
 3. **Monitors health** with anomaly detection (Isolation Forest)
 4. **Predicts RUL** with confidence intervals (XGBoost + Bootstrap)
 5. **Quantifies business impact** (cost optimization, risk assessment)
 6. **Supports decisions** through an executive dashboard
 
-## Key Results
+## Test Results using turbofan engines (NASA C-MAPSS)
 
 | Metric | Result | Industry Significance |
 |--------|--------|----------------------|
@@ -71,5 +71,5 @@ The platform demonstrates capability across:
 
 ## Conclusion
 
-The Reliability Intelligence Platform V1 is an asset that demonstrates expertise across simulation, reliability engineering, machine learning, and business decision-making. 
-> *"I am constructing evidence of my expertise in advanced systems simulation and reliability engineering, industrial AI, and machine learning across semiconductor and aerospace systems."*
+This Intelligence Platform V1 is an asset that demonstrates expertise across simulation, reliability engineering, machine learning, and business decision-making. 
+> *"Currently, I am constructing evidence of my expertise in advanced systems simulation and reliability engineering, industrial AI, and machine learning across complex industrial systems."*
