@@ -20,7 +20,6 @@ from sklearn.preprocessing import StandardScaler
 # Page configuration
 st.set_page_config(
     page_title="Reliability Intelligence Platform",
-    page_icon="🔧",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -53,7 +52,7 @@ df = load_data()
 xgb_model, scaler = load_models()
 
 # Sidebar
-st.sidebar.header("🔍 Navigation & Controls")
+st.sidebar.header(" Navigation & Controls")
 
 # Asset selection
 engine_ids = sorted(df['unit_number'].unique())
@@ -65,7 +64,7 @@ selected_engine = st.sidebar.selectbox(
 )
 
 # Cost parameters
-st.sidebar.subheader("💰 Cost Parameters")
+st.sidebar.subheader(" Cost Parameters")
 downtime_cost = st.sidebar.number_input(
     "Downtime Cost (£/hour)",
     min_value=1000,
@@ -94,7 +93,7 @@ maintenance_cost = st.sidebar.number_input(
 )
 
 # Thresholds
-st.sidebar.subheader("⚙️ Risk Thresholds")
+st.sidebar.subheader("Risk Thresholds")
 high_risk_threshold = st.sidebar.slider(
     "High Risk Threshold (cycles)",
     min_value=20,
@@ -191,11 +190,12 @@ if xgb_model is not None and scaler is not None:
     st.subheader("Asset Health & Degradation")
     
     # Create tabs for different views
-    tab1, tab2, tab3, tab4 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "RUL Prediction", 
         "Cost Optimization", 
         "Sensor Trends", 
-        "Fleet Risk"
+        "Fleet Risk",
+        "What-If Analysis" 
     ])
     
     with tab1:
@@ -524,6 +524,241 @@ if xgb_model is not None and scaler is not None:
 else:
     st.error("Models not found. Please train the RUL predictor first.")
     st.info("Run: `python src/ml/rul_predictor.py` to train models")
+
+    with tab5:
+        st.subheader(" What-If Sensitivity Analysis")
+        
+        st.markdown("""
+        **Explore how changes in cost parameters affect optimal maintenance decisions.**
+        This sensitivity analysis helps you understand the robustness of recommendations.
+        """)
+        
+        # Only show if we have a valid RUL prediction
+        if latest_rul > 0:
+            # Sensitivity sliders
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Maintenance time range
+                max_range = int(min(latest_rul * 1.5, 200))
+                min_range = 0
+                
+                if max_range > 1:
+                    sensitivity_hours = st.slider(
+                        "Maintenance Time Range (cycles)",
+                        min_value=min_range,
+                        max_value=max_range,
+                        value=(min_range, min(max_range, int(latest_rul) if latest_rul > 0 else 20)),
+                        step=1,
+                        help="Range of maintenance times to evaluate"
+                    )
+                else:
+                    st.warning("RUL is too small for sensitivity analysis. Select a different asset.")
+                    sensitivity_hours = (0, 10)
+            
+            with col2:
+                cost_multiplier = st.slider(
+                    "Cost Scenario Multiplier",
+                    min_value=0.5,
+                    max_value=2.0,
+                    value=1.0,
+                    step=0.1,
+                    help="Scales all costs up/down to test sensitivity"
+                )
+            
+            # Run sensitivity analysis if we have a valid range
+            if latest_rul > 0 and sensitivity_hours[1] > sensitivity_hours[0]:
+                # Generate cost curves for different scenarios
+                maintenance_times = np.arange(
+                    max(0, sensitivity_hours[0]),
+                    min(int(latest_rul * 1.5), sensitivity_hours[1] + 1),
+                    1
+                )
+                
+                if len(maintenance_times) > 1:
+                    # --- Base Case ---
+                    base_costs = []
+                    for t in maintenance_times:
+                        result = analyzer.calculate_total_cost(latest_rul, t, t < latest_rul)
+                        base_costs.append(result['total_cost'] * cost_multiplier)
+                    
+                    # --- Optimistic Case (lower costs) ---
+                    low_costs = []
+                    for t in maintenance_times:
+                        analyzer_low = BusinessImpactAnalyzer(
+                            downtime_cost_per_hour=downtime_cost * 0.7,
+                            part_cost=part_cost * 0.7,
+                            maintenance_cost=maintenance_cost * 0.7
+                        )
+                        result = analyzer_low.calculate_total_cost(latest_rul, t, t < latest_rul)
+                        low_costs.append(result['total_cost'])
+                    
+                    # --- Pessimistic Case (higher costs) ---
+                    high_costs = []
+                    for t in maintenance_times:
+                        analyzer_high = BusinessImpactAnalyzer(
+                            downtime_cost_per_hour=downtime_cost * 1.3,
+                            part_cost=part_cost * 1.3,
+                            maintenance_cost=maintenance_cost * 1.3
+                        )
+                        result = analyzer_high.calculate_total_cost(latest_rul, t, t < latest_rul)
+                        high_costs.append(result['total_cost'])
+                    
+                    # --- Plot Sensitivity ---
+                    fig = go.Figure()
+                    
+                    # Base case
+                    fig.add_trace(go.Scatter(
+                        x=maintenance_times,
+                        y=base_costs,
+                        mode='lines',
+                        name='Base Case',
+                        line=dict(color='blue', width=3)
+                    ))
+                    
+                    # Optimistic case
+                    fig.add_trace(go.Scatter(
+                        x=maintenance_times,
+                        y=low_costs,
+                        mode='lines',
+                        name='Optimistic (70% costs)',
+                        line=dict(color='green', width=2, dash='dash')
+                    ))
+                    
+                    # Pessimistic case
+                    fig.add_trace(go.Scatter(
+                        x=maintenance_times,
+                        y=high_costs,
+                        mode='lines',
+                        name='Pessimistic (130% costs)',
+                        line=dict(color='red', width=2, dash='dash')
+                    ))
+                    
+                    # Find optimal points for base case
+                    optimal_idx = np.argmin(base_costs)
+                    optimal_time = maintenance_times[optimal_idx]
+                    optimal_cost = base_costs[optimal_idx]
+                    
+                    # Mark optimal point
+                    fig.add_trace(go.Scatter(
+                        x=[optimal_time],
+                        y=[optimal_cost],
+                        mode='markers',
+                        marker=dict(size=15, color='red', symbol='star'),
+                        name=f'Optimal: {optimal_time:.0f} cycles'
+                    ))
+                    
+                    # Add vertical line for optimal
+                    fig.add_vline(
+                        x=optimal_time,
+                        line_dash="dash",
+                        line_color="red",
+                        annotation_text=f"Optimal: {optimal_time:.0f}",
+                        annotation_position="top"
+                    )
+                    
+                    fig.update_layout(
+                        title='Sensitivity Analysis: Cost Scenarios',
+                        xaxis_title='Maintenance Time (cycles from now)',
+                        yaxis_title=f'Total Cost (£)',
+                        height=500,
+                        hovermode='x',
+                        legend=dict(
+                            yanchor="top",
+                            y=0.99,
+                            xanchor="left",
+                            x=0.01
+                        )
+                    )
+                    
+                    st.plotly_chart(fig, use_container_width=True)
+                    
+                    # --- Interpretation ---
+                    st.subheader(" Interpretation & Recommendations")
+                    
+                    col1, col2, col3 = st.columns(3)
+                    
+                    with col1:
+                        st.metric(
+                            "Optimal Maintenance Window",
+                            f"{optimal_time:.0f} cycles",
+                            "from now"
+                        )
+                    
+                    with col2:
+                        st.metric(
+                            "Cost Range at Optimum",
+                            f"£{min(low_costs):,.0f} - £{max(high_costs):,.0f}",
+                            f"Base: £{optimal_cost:,.0f}"
+                        )
+                    
+                    with col3:
+                        # Calculate stability of optimal window
+                        # Find optimal for each scenario
+                        opt_low = maintenance_times[np.argmin(low_costs)]
+                        opt_high = maintenance_times[np.argmin(high_costs)]
+                        stability = abs(opt_high - opt_low)
+                        
+                        if stability <= 5:
+                            stability_status = " High"
+                            stability_color = "green"
+                        elif stability <= 15:
+                            stability_status = " Medium"
+                            stability_color = "orange"
+                        else:
+                            stability_status = " Low"
+                            stability_color = "red"
+                        
+                        st.metric(
+                            "Recommendation Stability",
+                            stability_status,
+                            f"±{stability:.0f} cycles variation"
+                        )
+                    
+                    # Detailed interpretation
+                    st.info(f"""
+                    **Analysis Summary:**
+                    
+                    - **Optimal Maintenance Window:** {optimal_time:.0f} cycles from now
+                    - **Cost Savings vs. Reactive:** £{optimal['cost_avoidance'] * cost_multiplier:,.0f}
+                    - **Stability Assessment:** The optimal window {'is stable across cost scenarios' if stability <= 10 else 'varies with cost assumptions'}
+                    
+                    **Recommendation:**
+                    {' Proceed with scheduled maintenance at the optimal window. The recommendation is robust.' if stability <= 10 else ' Consider conducting maintenance earlier or later depending on your risk tolerance.'}
+                    
+                    **Next Steps:**
+                    - Monitor asset condition leading up to the optimal window
+                    - Prepare maintenance resources in advance
+                    - Consider a mid-cycle inspection if concerns arise
+                    """)
+                    
+                    # --- Cost Scenario Comparison Table ---
+                    st.subheader(" Scenario Comparison")
+                    
+                    scenario_data = pd.DataFrame({
+                        'Scenario': ['Base Case', 'Optimistic (70% costs)', 'Pessimistic (130% costs)'],
+                        'Optimal Maintenance': [f"{optimal_time:.0f} cycles", f"{opt_low:.0f} cycles", f"{opt_high:.0f} cycles"],
+                        'Total Cost': [
+                            f"£{optimal_cost:,.0f}",
+                            f"£{min(low_costs):,.0f}",
+                            f"£{max(high_costs):,.0f}"
+                        ],
+                        'Cost Avoidance': [
+                            f"£{optimal['cost_avoidance'] * cost_multiplier:,.0f}",
+                            f"£{optimal['cost_avoidance'] * 1.3:,.0f}",
+                            f"£{optimal['cost_avoidance'] * 0.7:,.0f}"
+                        ]
+                    })
+                    
+                    st.table(scenario_data)
+                    
+                else:
+                    st.warning("Adjust sensitivity range to include more maintenance times.")
+            else:
+                st.warning("RUL is too small for meaningful sensitivity analysis. Select a different asset with RUL > 10 cycles.")
+        else:
+            st.warning(" This asset has already failed or is at end-of-life (RUL ≤ 0 cycles).")
+            st.info("Select a different asset from the sidebar to analyze.")
 
 # Footer
 st.sidebar.markdown("---")
