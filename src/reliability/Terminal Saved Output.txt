@@ -1,0 +1,64 @@
+Last login: Mon Jul 13 09:11:15 on ttys000
+ogochukwuduruiheme@Mac ~ % cd ~/reliability-intelligence-v1
+ogochukwuduruiheme@Mac reliability-intelligence-v1 % code src/simulation/cmapss_loader.py
+ogochukwuduruiheme@Mac reliability-intelligence-v1 % ls -la src/simulation/
+total 32
+drwxr-xr-x  6 ogochukwuduruiheme  staff   192 13 Jul 12:11 .
+drwxr-xr-x  7 ogochukwuduruiheme  staff   224 13 Jul 12:02 ..
+-rw-r--r--  1 ogochukwuduruiheme  staff     0 16 Jun 14:16 .gitkeep
+-rw-r--r--  1 ogochukwuduruiheme  staff  2215 13 Jul 12:13 cmapss_loader.py
+-rw-r--r--@ 1 ogochukwuduruiheme  staff  2238 13 Jul 11:46 src:simulation:cmapss_loader.py
+-rw-r--r--@ 1 ogochukwuduruiheme  staff  4362 13 Jul 12:10 Terminal Saved Output.txt
+ogochukwuduruiheme@Mac reliability-intelligence-v1 % sourcee venv/bin/activate
+zsh: command not found: sourcee
+ogochukwuduruiheme@Mac reliability-intelligence-v1 % source venv/bin/activate
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % python src/simulation/cmpass_loader.py
+/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/Resources/Python.app/Contents/MacOS/Python: can't open file '/Users/ogochukwuduruiheme/reliability-intelligence-v1/src/simulation/cmpass_loader.py': [Errno 2] No such file or directory
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % python src/simulation/cmapss_loader.py
+Loaded 20631 rows from FD001 training set
+Features: ['unit_number', 'time_in_cycles', 'op_setting_1', 'op_setting_2', 'op_setting_3', 'sensor_2', 'sensor_3', 'sensor_4', 'sensor_7', 'sensor_8', 'sensor_9', 'sensor_11', 'sensor_12', 'sensor_13', 'sensor_14', 'sensor_15', 'sensor_17', 'sensor_20', 'sensor_21', 'rul']
+
+First 5 rows:
+   unit_number  time_in_cycles  op_setting_1  ...  sensor_20  sensor_21  rul
+0            1               1       -0.0007  ...      39.06    23.4190  125
+1            1               2        0.0019  ...      39.00    23.4236  125
+2            1               3       -0.0043  ...      38.95    23.3442  125
+3            1               4        0.0007  ...      38.88    23.3739  125
+4            1               5       -0.0019  ...      38.90    23.4044  125
+
+[5 rows x 20 columns]
+
+RUL distribution:
+count    20631.000000
+mean        86.829286
+std         41.673699
+min          0.000000
+25%         51.000000
+50%        103.000000
+75%        125.000000
+max        125.000000
+Name: rul, dtype: float64
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % cd ~/reliability-intelligence-v1
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % nano src/reliability/weibull_analyzer.py
+
+  UW PICO 5.09           File: src/reliability/weibull_analyzer.py              
+
+        print(f"   P(failure <= {horizon} cycles): {prob*100:.2f}%")
+    
+    # Create plots
+    print("\n6. Generating Weibull plots...")
+    plot_weibull_analysis(wf, failure_times)
+    
+    print("\n" + "=" * 60)
+    print("WEIBULL ANALYSIS COMPLETE")
+    print("=" * 60)
+    
+    
+    
+    
+    
+    
+    
+File Name to write : src/reliability/weibull_analyzer.py                        
+^G Get Help  ^T  To Files                                                     
+^C Cancel    TAB Complete                                                     

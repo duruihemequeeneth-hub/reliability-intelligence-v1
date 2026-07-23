@@ -1,0 +1,117 @@
+Last login: Mon Jul 13 11:49:22 on ttys001
+ogochukwuduruiheme@Mac reliability-intelligence-v1 % source venv/bin/activate
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % python src/simulation/cmapss_loader.py
+Loaded 20631 rows from FD001 training set
+Features: ['unit_number', 'time_in_cycles', 'op_setting_1', 'op_setting_2', 'op_setting_3', 'sensor_2', 'sensor_3', 'sensor_4', 'sensor_7', 'sensor_8', 'sensor_9', 'sensor_11', 'sensor_12', 'sensor_13', 'sensor_14', 'sensor_15', 'sensor_17', 'sensor_20', 'sensor_21', 'rul']
+
+First 5 rows:
+   unit_number  time_in_cycles  op_setting_1  ...  sensor_20  sensor_21  rul
+0            1               1       -0.0007  ...      39.06    23.4190  125
+1            1               2        0.0019  ...      39.00    23.4236  125
+2            1               3       -0.0043  ...      38.95    23.3442  125
+3            1               4        0.0007  ...      38.88    23.3739  125
+4            1               5       -0.0019  ...      38.90    23.4044  125
+
+[5 rows x 20 columns]
+
+RUL distribution:
+count    20631.000000
+mean        86.829286
+std         41.673699
+min          0.000000
+25%         51.000000
+50%        103.000000
+75%        125.000000
+max        125.000000
+Name: rul, dtype: float64
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % git add src/simulation/cmapss_loader.py
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % git commit -m "C-MAPSS loader with RUL labeling"
+[main 25cc68e] C-MAPSS loader with RUL labeling
+ 1 file changed, 71 insertions(+)
+ create mode 100644 src/simulation/cmapss_loader.py
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % git push
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 10 threads
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 1.33 KiB | 1.33 MiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/duruihemequeeneth-hub/reliability-intelligence-v1.git
+   497d00f..25cc68e  main -> main
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % nano src/reliability/weibull_analyzer.py
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % python src/reliability/weibull_analyzer.py
+============================================================
+WEIBULL ANALYSIS FOR TURBOFAN ENGINE FAILURE TIMES
+============================================================
+
+1. Loading C-MAPSS FD001 data...
+2. Extracting failure times for each engine...
+   Found 100 engines with failure times
+   Failure time range: 128 to 362 cycles
+   Mean failure time: 206.3 cycles
+   Std deviation: 46.1 cycles
+
+3. Fitting Weibull distribution...
+
+4. Reliability Metrics:
+   Shape parameter (β): 4.409
+   Scale parameter (η): 225.0 cycles
+   MTBF: 205.1 cycles
+   Characteristic life (63.2% failure): 225.0 cycles
+   B10 life (10% failure): 135.1 cycles
+   B50 life (50% failure): 207.1 cycles
+
+5. Failure Probabilities at Different Horizons:
+   P(failure <= 50 cycles): 0.13%
+   P(failure <= 100 cycles): 2.76%
+   P(failure <= 150 cycles): 15.40%
+   P(failure <= 200 cycles): 44.82%
+   P(failure <= 250 cycles): 79.62%
+
+6. Generating Weibull plots...
+Plot saved to assets/weibull_analysis.png
+
+============================================================
+WEIBULL ANALYSIS COMPLETE
+============================================================
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % git add src/reliability/weibull_analyzer.py assets/weibull_analysis.png
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % git commit -m "Weibull Analysis"
+[main 50bae51] Weibull Analysis
+ 2 files changed, 169 insertions(+)
+ create mode 100644 assets/weibull_analysis.png
+ create mode 100644 src/reliability/weibull_analyzer.py
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % git push
+Enumerating objects: 11, done.
+Counting objects: 100% (10/10), done.
+Delta compression using up to 10 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 306.65 KiB | 27.88 MiB/s, done.
+Total 7 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/duruihemequeeneth-hub/reliability-intelligence-v1.git
+   25cc68e..50bae51  main -> main
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % cd ~/reliability-intelligence-v1
+(venv) ogochukwuduruiheme@Mac reliability-intelligence-v1 % nano src/ml/anomaly_detector.py
+
+  UW PICO 5.09            File: src/ml/anomaly_detector.py            Modified  
+
+          f"({anomaly_summary['anomaly_pct'].max():.1f}% anomalies)")
+    
+    # Save summary
+    anomaly_summary.to_csv('data/processed/anomaly_summary.csv', index=False)   
+    print("\n   Anomaly summary saved to data/processed/anomaly_summary.csv")
+    
+    print("\n" + "=" * 60)
+    print("HEALTH MONITORING COMPLETE")
+    print("=" * 60)
+    
+    
+    
+    
+    
+    
+    
+
+^G Get Help  ^O WriteOut  ^R Read File ^Y Prev Pg   ^K Cut Text  ^C Cur Pos   
+^X Exit      ^J Justify   ^W Where is  ^V Next Pg   ^U UnCut Text^T To Spell  
