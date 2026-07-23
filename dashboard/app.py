@@ -523,7 +523,8 @@ if xgb_model is not None and scaler is not None:
 
 else:
     st.error("Models not found. Please train the RUL predictor first.")
-    st.info("Run: `python src/ml/rul_predictor.py` to train models")
+    st.info("Run: `python src/ml/rul_predictor.py` to train models"
+    )
 
     with tab5:
         st.subheader(" What-If Sensitivity Analysis")
@@ -745,8 +746,8 @@ else:
                         ],
                         'Cost Avoidance': [
                             f"£{optimal['cost_avoidance'] * cost_multiplier:,.0f}",
-                            f"£{optimal['cost_avoidance'] * 1.3:,.0f}",
-                            f"£{optimal['cost_avoidance'] * 0.7:,.0f}"
+                            f"£{optimal['cost_avoidance'] * 0.7:,.0f}",
+                            f"£{optimal['cost_avoidance'] * 1.3:,.0f}"
                         ]
                     })
                     
